@@ -73,15 +73,7 @@ export default function UserManagement() {
 
   return (
     <div className="container mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">유저 관리</h1>
-        <button
-          onClick={() => setShowFilterModal(true)}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          역할 필터 {selectedRole !== 'all' && `(${selectedRole})`}
-        </button>
-      </div>
+      <h1 className="text-2xl font-bold mb-6">유저 관리</h1>
       
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full">
@@ -99,8 +91,16 @@ export default function UserManagement() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 이메일
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                역할
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                onClick={() => setShowFilterModal(true)}
+              >
+                <div className="flex items-center">
+                  역할
+                  <span className="ml-1 text-xs">
+                    {selectedRole !== 'all' ? `(${selectedRole})` : '▼'}
+                  </span>
+                </div>
               </th>
             </tr>
           </thead>
