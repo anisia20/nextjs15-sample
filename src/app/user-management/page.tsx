@@ -18,7 +18,13 @@ export default function UserManagement() {
   const [loading, setLoading] = useState(true);
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState<RoleFilter>('all');
+  const [newUser, setNewUser] = useState({
+    username: '',
+    email: '',
+    role: 'user'
+  });
 
   useEffect(() => {
     // 목데이터로 사용자 목록 설정
@@ -67,13 +73,37 @@ export default function UserManagement() {
     setShowFilterModal(false);
   };
 
+  const handleAddUser = () => {
+    const newId = Math.max(...users.map(user => user.id)) + 1;
+    const userToAdd = {
+      id: newId,
+      ...newUser
+    };
+    
+    setUsers([...users, userToAdd]);
+    setNewUser({
+      username: '',
+      email: '',
+      role: 'user'
+    });
+    setShowAddModal(false);
+  };
+
   if (loading) {
     return <div className="flex justify-center items-center h-screen">로딩 중...</div>;
   }
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-2xl font-bold mb-6">유저 관리</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">유저 관리</h1>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          유저 추가
+        </button>
+      </div>
       
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full">
@@ -168,6 +198,68 @@ export default function UserManagement() {
             >
               닫기
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* 유저 추가 모달 */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-96">
+            <h2 className="text-xl font-bold mb-4">새 유저 추가</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  사용자명
+                </label>
+                <input
+                  type="text"
+                  value={newUser.username}
+                  onChange={(e) => setNewUser({...newUser, username: e.target.value})}
+                  className="w-full px-3 py-2 border rounded-md"
+                  placeholder="사용자명을 입력하세요"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  이메일
+                </label>
+                <input
+                  type="email"
+                  value={newUser.email}
+                  onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                  className="w-full px-3 py-2 border rounded-md"
+                  placeholder="이메일을 입력하세요"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  역할
+                </label>
+                <select
+                  value={newUser.role}
+                  onChange={(e) => setNewUser({...newUser, role: e.target.value})}
+                  className="w-full px-3 py-2 border rounded-md"
+                >
+                  <option value="user">일반 사용자</option>
+                  <option value="admin">관리자</option>
+                </select>
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end space-x-2">
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleAddUser}
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              >
+                추가
+              </button>
+            </div>
           </div>
         </div>
       )}
